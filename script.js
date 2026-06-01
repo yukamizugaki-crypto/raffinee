@@ -200,3 +200,26 @@ accordionCards.forEach(card => {
     }
   });
 });
+
+// ============================
+// Image Slideshows (Gift & Online Shop)
+// ============================
+function initSlider(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const slides = container.querySelectorAll('.slide');
+  if (slides.length <= 1) return;
+  
+  let currentIndex = 0;
+  setInterval(() => {
+    slides[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex + 1) % slides.length;
+    slides[currentIndex].classList.add('active');
+  }, 5000);
+}
+
+// 読み込み完了後にスライダー初期化
+window.addEventListener('DOMContentLoaded', () => {
+  initSlider('gift-slider');
+  initSlider('rakuten-slider');
+});
