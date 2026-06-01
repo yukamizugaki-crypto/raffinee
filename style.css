@@ -374,29 +374,17 @@ ul { list-style: none; }
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-green-border);
   
-  /* モバイル・タブレット：最初は非表示でスクロール後に上からスライドイン */
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, box-shadow var(--transition);
+  /* 最初から上下スクロールに関わらず常に表示・固定 */
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  transition: box-shadow var(--transition), background var(--transition);
 }
 
 #site-header.scrolled,
 #site-header:focus-within {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
   box-shadow: var(--shadow-md);
-}
-
-/* デスクトップ：最初から常に表示 */
-@media (min-width: 768px) {
-  #site-header {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-    transition: box-shadow var(--transition);
-  }
+  background: rgba(250, 250, 248, 0.98);
 }
 
 .header-inner {
@@ -422,6 +410,11 @@ ul { list-style: none; }
   font-style: italic;
   color: var(--color-gold-dark);
   letter-spacing: 0.08em;
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .logo-en {
+    font-size: 1.15rem;
+  }
 }
 .logo-ja {
   font-family: var(--font-mincho);
@@ -452,6 +445,19 @@ ul { list-style: none; }
     letter-spacing: 0.08em;
     transition: var(--transition);
   }
+
+  /* タブレット〜中画面幅用のレスポンシブ微調整（スライドや折り返しを防ぐ） */
+  @media (max-width: 1024px) {
+    .main-nav ul {
+      gap: 2px;
+    }
+    .main-nav a {
+      padding: 6px 8px;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+    }
+  }
+
   .main-nav a:hover {
     background: var(--color-green-light);
     color: var(--color-green-dark);
@@ -1315,9 +1321,19 @@ ul { list-style: none; }
 /* ============================
    INSTAGRAM
    ============================ */
-.insta-wrap {
+.sns-wrap {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+@media (min-width: 600px) {
+  .sns-wrap {
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
+  }
 }
 
 .insta-btn {
@@ -1354,6 +1370,41 @@ ul { list-style: none; }
   transition: transform var(--transition);
 }
 .insta-btn:hover .insta-arrow { transform: translateX(4px); }
+
+.line-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 28px;
+  background: linear-gradient(135deg, #06C755 0%, #05B34C 100%);
+  color: var(--color-white);
+  font-family: var(--font-mincho);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  box-shadow: 0 4px 20px rgba(6, 199, 85, 0.25);
+  transition: var(--transition);
+  width: 100%;
+  justify-content: center;
+  min-height: 56px;
+}
+@media (min-width: 520px) {
+  .line-btn {
+    width: auto;
+    padding: 18px 44px;
+    font-size: 1rem;
+  }
+}
+.line-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(6, 199, 85, 0.4);
+  opacity: 0.9;
+}
+.line-btn svg { flex-shrink: 0; }
+.line-arrow {
+  margin-left: 4px;
+  transition: transform var(--transition);
+}
+.line-btn:hover .line-arrow { transform: translateX(4px); }
 
 /* ============================
    SHOP INFO — モバイルファースト
@@ -1404,6 +1455,33 @@ ul { list-style: none; }
   color: var(--color-gold-olive);
   display: block;
   margin-top: 4px;
+}
+
+/* 決済方法のスタイリング */
+.payment-group {
+  margin-bottom: 12px;
+}
+.payment-group:last-child {
+  margin-bottom: 0;
+}
+.payment-title {
+  display: block;
+  font-weight: bold;
+  font-size: 0.85em;
+  color: var(--color-gold-dark);
+  margin-bottom: 4px;
+  border-bottom: 1px dashed var(--color-border-gold);
+  padding-bottom: 2px;
+  width: fit-content;
+}
+.payment-text {
+  font-size: 0.95em;
+  margin-bottom: 2px;
+  color: var(--color-text);
+  line-height: 1.6;
+}
+.payment-text:last-child {
+  margin-bottom: 0;
 }
 
 /* モバイル時のテーブルレイアウト最適化 */
@@ -1794,4 +1872,124 @@ ul { list-style: none; }
   .deco-about-right { right: 1%; top: 5%; width: 280px; height: 380px; }
   .deco-rakuten-left { left: 1%; top: 10%; width: 300px; height: 420px; }
   .deco-shopinfo-right { right: 1%; bottom: 3%; width: 260px; height: 360px; }
+}
+
+/* ============================
+   FLOATING BOTTOM BAR (Fully Responsive)
+   ============================ */
+.floating-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(195, 161, 101, 0.25);
+  box-shadow: 0 -4px 24px rgba(47, 54, 49, 0.08);
+  z-index: 9999;
+  padding-bottom: env(safe-area-inset-bottom, 0); /* iPhone Notch support */
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bottom-bar-inner {
+  display: flex;
+  height: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.bottom-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: background 0.2s ease, transform 0.15s ease;
+  gap: 4px;
+}
+
+.bottom-bar-item:active {
+  background: rgba(195, 161, 101, 0.05);
+  transform: scale(0.96);
+}
+
+.bottom-bar-svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.25s ease;
+}
+
+.bottom-bar-item:hover .bottom-bar-svg {
+  transform: translateY(-2px);
+}
+
+.bottom-bar-label {
+  font-family: var(--font-mincho);
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+/* Brand specific colors with harmonized elegance */
+.rakuten-item .bottom-bar-svg {
+  color: var(--color-pink-dark); /* Crimson matching site theme */
+}
+.rakuten-item .bottom-bar-label {
+  color: var(--color-pink-dark);
+}
+
+.line-item .bottom-bar-svg {
+  color: #06C755; /* Official LINE Green */
+}
+.line-item .bottom-bar-label {
+  color: #05B34C;
+}
+
+.instagram-item .bottom-bar-svg {
+  color: #d62976; /* Official Instagram Pink */
+}
+.instagram-item .bottom-bar-label {
+  color: #d62976;
+}
+
+/* Responsive Adaptive Styling for Desktop/Tablet */
+@media (min-width: 768px) {
+  .floating-bottom-bar {
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 420px;
+    height: 60px;
+    border-radius: 999px;
+    border: 1px solid rgba(195, 161, 101, 0.35);
+    box-shadow: 0 8px 32px rgba(47, 54, 49, 0.12);
+    padding-bottom: 0;
+  }
+  
+  .bottom-bar-item {
+    border-radius: 999px;
+  }
+  
+  .bottom-bar-item:hover {
+    background: rgba(195, 161, 101, 0.06);
+  }
+}
+
+/* Adjust page-top button position so it never overlaps the bar */
+@media (max-width: 767px) {
+  #page-top {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+@media (min-width: 768px) {
+  #page-top {
+    bottom: 96px !important; /* Keep clear of the floating pill */
+  }
 }
